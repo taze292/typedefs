@@ -26,9 +26,30 @@ Make sure to replace any occurrences of `USER` with your windows username.
 
 # Credits
 These files were generated based off rocult's luau type defs (updated) & extended by AI with everything on Volt's docs & Potassium's docs.  
+Shoutout to actualmasteroogway for archiving Synapse's documentation for me to use & also creating the original luau typedefs.
+
+# Updates
+Update 1
+```diff
++ HttpPost
++ HttpGetAsync
++ HttpPostAsync
+```
+
+Update 2
+```diff
++ Added Synapse Z ImGui Library
++ Added syn Library for Synapse Z
++ Expanded crypt Library
++ Expanded oth Library
++ Added DataModel Http Method Aliases
++ http Library
++ All request Aliases
+```
 
 **Sources**:
 - https://docs.voltbz.net/docs
 - https://docs.potassium.pro/api-reference/introduction
 - https://github.com/kix43/luau-defs/tree/main
+- https://actualmasteroogway.github.io/synapse-x-documentation/
 - (cant link because rocults github is banned)
