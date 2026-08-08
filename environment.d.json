@@ -30,6 +30,42 @@
             "string"
         ]
     },
+    "@custom/global/game.HttpPost": {
+        "documentation": "Performs an HTTP POST request to the given URL with the given data and returns the response body.",
+        "code_sample": "-- Basic POST\nlocal body = game:HttpPost(\"https://httpbin.org/post\", \"foo=bar\")\nprint(string.sub(body, 1, 60) .. \"...\")\n\n-- With flags (executor-specific behavior may vary)\nlocal body2 = game:HttpPost(\n    \"https://httpbin.org/anything\",\n    \"foo=bar\",\n    true, -- synchronous (yield until finished)\n    Enum.HttpRequestType.Default,\n    false -- doNotAllowDiabolicalMode\n)\nprint(#body2)",
+        "params": [
+            {
+                "name": "url",
+                "type": "string",
+                "documentation": "The absolute URL to request (e.g., https://example.com/path)"
+            },
+            {
+                "name": "data",
+                "type": "string",
+                "documentation": "The request body to post to the URL"
+            },
+            {
+                "name": "synchronous",
+                "type": "boolean",
+                "documentation": "If true (or omitted), the call yields until completion; if false, behavior is executor-specific",
+                "optional": true
+            },
+            {
+                "name": "httpRequestType",
+                "type": "Enum.HttpRequestType",
+                "documentation": "A hint for classifying the request (e.g., Enum.HttpRequestType.Default)"
+            },
+            {
+                "name": "doNotAllowDiabolicalMode",
+                "type": "boolean",
+                "documentation": "Advanced flag; when true, disables special/internal request modes if supported",
+                "optional": true
+            }
+        ],
+        "returns": [
+            "string"
+        ]
+    },
     "@custom/global/game.HttpGetAsync": {
         "documentation": "Performs an HTTP GET request to the given URL and returns the response body. Despite the name, most implementations yield until the request completes.",
         "code_sample": "local body = game:HttpGetAsync(\"https://httpbin.org/get\", Enum.HttpRequestType.Default)\nprint(string.sub(body, 1, 60) .. \"...\")",
@@ -38,6 +74,30 @@
                 "name": "url",
                 "type": "string",
                 "documentation": "The absolute URL to request (e.g., https://example.com/path)"
+            },
+            {
+                "name": "httpRequestType",
+                "type": "Enum.HttpRequestType",
+                "documentation": "A hint for classifying the request (e.g., Enum.HttpRequestType.Default)"
+            }
+        ],
+        "returns": [
+            "string"
+        ]
+    },
+    "@custom/global/game.HttpPostAsync": {
+        "documentation": "Performs an HTTP POST request to the given URL with the given data and returns the response body. Despite the name, most implementations yield until the request completes.",
+        "code_sample": "local body = game:HttpPostAsync(\"https://httpbin.org/post\", \"foo=bar\", Enum.HttpRequestType.Default)\nprint(string.sub(body, 1, 60) .. \"...\")",
+        "params": [
+            {
+                "name": "url",
+                "type": "string",
+                "documentation": "The absolute URL to request (e.g., https://example.com/path)"
+            },
+            {
+                "name": "data",
+                "type": "string",
+                "documentation": "The request body to post to the URL"
             },
             {
                 "name": "httpRequestType",
