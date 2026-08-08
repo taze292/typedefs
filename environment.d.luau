@@ -83,10 +83,17 @@ declare function setstackhidden(func: AnyFunction | number, hidden: boolean): ()
 --#region Oth
 type oth = {
     hook: <A..., R...>(target: GenericFunction<A..., R...>, hook: GenericFunction<A..., R...>) -> GenericFunction<A..., R...>,
-    get_root_callback: () -> AnyFunction,
-    is_hook_thread: () -> boolean,
+    wrap: (func: AnyFunction) -> AnyFunction,
     unhook: (target: AnyFunction) -> (),
+    un_hook: (target: AnyFunction) -> (),
+    get_root_callback: () -> AnyFunction,
+    getrootcallback: () -> AnyFunction,
+    is_hook_thread: () -> boolean,
+    ishookthread: () -> boolean,
+    is_hooked: (func: AnyFunction) -> boolean,
+    ishooked: (func: AnyFunction) -> boolean,
     get_original_thread: () -> thread?,
+    getoriginalthread: () -> thread?,
 }
 declare oth: oth
 --#endregion
@@ -113,14 +120,65 @@ declare function rconsolewarn(message: any): ()
 --#region Cryptography
 type CryptCipherMode = "CBC" | "ECB" | "CTR" | "CFB" | "OFB" | "GCM"
 type CryptHashAlgorithm = "shA" | "sha384" | "sha512" | "md5" | "sha256" | "sha3-224" | "sha3-256" | "sha3-512"
-type crypt = {
-    base64decode: (data: string) -> string,
-    base64encode: (data: string) -> string,
-
+type cryptUser = {
     encrypt: (data: string, key: string, iv: string?, mode: CryptCipherMode?) -> (string, string),
     decrypt: (data: string, key: string, iv: string, mode: CryptCipherMode) -> string,
-    generatebytes: (size: number) -> string,
+}
+type crypt = {
+    encrypt: (data: string, key: string, iv: string?, mode: CryptCipherMode?) -> (string, string),
+    decrypt: (data: string, key: string, iv: string, mode: CryptCipherMode) -> string,
+
+    userencrypt: (data: string, key: string, iv: string?, mode: CryptCipherMode?) -> (string, string),
+    user_encrypt: (data: string, key: string, iv: string?, mode: CryptCipherMode?) -> (string, string),
+    userdecrypt: (data: string, key: string, iv: string, mode: CryptCipherMode) -> string,
+    user_decrypt: (data: string, key: string, iv: string, mode: CryptCipherMode) -> string,
+    user: cryptUser,
+
+    sealencrypt: (data: string, key: string) -> string,
+    seal_encrypt: (data: string, key: string) -> string,
+    sealdecrypt: (data: string, key: string) -> string,
+    seal_decrypt: (data: string, key: string) -> string,
+    seal: (data: string, key: string) -> string,
+    sealkeygen: () -> (string, string),
+    seal_keygen: () -> (string, string),
+
+    sign: (data: string, key: string) -> string,
+    signopen: (data: string, key: string) -> string,
+    sign_open: (data: string, key: string) -> string,
+    signkeygen: () -> (string, string),
+    sign_keygen: () -> (string, string),
+    signcreate: () -> (string, string),
+    sign_create: () -> (string, string),
+
+    lz4: (data: string) -> string,
+    lz4compress: (data: string) -> string,
+    lz4_compress: (data: string) -> string,
+    lz4decompress: (data: string) -> string,
+    lz4_decompress: (data: string) -> string,
+
+    hex: (data: string) -> string,
+    hexencode: (data: string) -> string,
+    hex_encode: (data: string) -> string,
+    hexdecode: (data: string) -> string,
+    hex_decode: (data: string) -> string,
+
+    base64: (data: string) -> string,
+    base64encode: (data: string) -> string,
+    base64_encode: (data: string) -> string,
+    base64decode: (data: string) -> string,
+    base64_decode: (data: string) -> string,
+
     generatekey: () -> string,
+    generate_key: () -> string,
+    generatebytes: (size: number) -> string,
+    generate_bytes: (size: number) -> string,
+    random: (size: number) -> string,
+
+    derivekey: (password: string, salt: string, iterations: number, keyLength: number) -> string,
+    derive_key: (password: string, salt: string, iterations: number, keyLength: number) -> string,
+    derivepassword: (password: string, salt: string) -> string,
+    derive_password: (password: string, salt: string) -> string,
+
     hash: (data: string, algorithm: CryptHashAlgorithm) -> string,
 }
 declare crypt: crypt
@@ -409,7 +467,14 @@ declare function getfastflagtype(fflag: string): string
 declare function get_process_identifier(): number
 declare function getfpscap(): number
 declare function gethwid(): string
-declare function httpget(self: any?, url: string): string
+declare httpget:
+    ((url: string, synchronous: boolean?, httpRequestType: typeof(Enum.HttpRequestType)?, doNotAllowDiabolicalMode: boolean?) -> string)
+    & ((self: any?, url: string) -> string)
+declare http_get:
+    ((url: string, synchronous: boolean?, httpRequestType: typeof(Enum.HttpRequestType)?, doNotAllowDiabolicalMode: boolean?) -> string)
+    & ((self: any?, url: string) -> string)
+declare function httppost(url: string, data: string, synchronous: boolean?, httpRequestType: typeof(Enum.HttpRequestType)?, doNotAllowDiabolicalMode: boolean?): string
+declare function http_post(url: string, data: string, synchronous: boolean?, httpRequestType: typeof(Enum.HttpRequestType)?, doNotAllowDiabolicalMode: boolean?): string
 declare function getobjects(self: any?, asset: string): { Instance }
 declare function setclipboard(text: string): ()
 declare function setfflag(fflag: string, value: any): ()
@@ -437,6 +502,15 @@ declare function saveinstance(root: Instance | { Instance }, options: SaveInstan
 declare function saveplace(options: SaveInstanceOptions?): ()
 
 declare game: typeof(game) & ExtraDataModel
+--#endregion
+
+--#region Http
+type http = {
+    request: (options: Request) -> Response,
+    gethostip: () -> string,
+}
+declare http: http
+declare function httprequest(options: Request): Response
 --#endregion
 
 --#region Reflection
@@ -597,3 +671,188 @@ type WebSocket = {
 }
 declare WebSocket: WebSocket
 --#endregion
+
+--#region Syn
+type SynToastType = "Success" | "Error" | "Warning" | "Info" | "Question"
+type SynCallStackEntry = {
+    currentline: number?,
+    env: AnyTable?,
+    source: string?,
+    name: string?,
+    numparams: number?,
+    is_vararg: BooleanNumber?,
+    func: AnyFunction?,
+}
+type SynThreadOptions = {
+    script: GenericScript?,
+    identity: number?,
+    env: AnyTable?,
+    thread: thread?,
+}
+type ToastNotificationOptions = {
+    Type: SynToastType,
+    Duration: number?,
+    Title: string,
+    Content: string,
+    IconColor: Color3?,
+}
+type syn = {
+    trampoline_call: (target: AnyFunction, call_stack: { SynCallStackEntry }, thread_options: SynThreadOptions, ...any) -> (boolean, ...any),
+    trampolinecall: (target: AnyFunction, call_stack: { SynCallStackEntry }, thread_options: SynThreadOptions, ...any) -> (boolean, ...any),
+
+    run_on_actor: (actor: Actor, source: string, ...any) -> boolean,
+    runonactor: (actor: Actor, source: string, ...any) -> boolean,
+
+    get_thread_identity: () -> number,
+    getthreadidentity: () -> number,
+    set_thread_identity: (identity: number) -> (),
+    setthreadidentity: (identity: number) -> (),
+
+    toast_notification: (options: ToastNotificationOptions) -> (),
+    toastnotification: (options: ToastNotificationOptions) -> (),
+
+    kill_process: () -> (),
+    killprocess: () -> (),
+
+    queue_on_teleport: (script: string) -> (),
+    queueonteleport: (script: string) -> (),
+    clear_teleport_queue: () -> (),
+    clearteleportqueue: () -> (),
+
+    protect_gui: (target: Instance) -> (),
+    protectgui: (target: Instance) -> (),
+    unprotect_gui: (target: Instance) -> (),
+    unprotectgui: (target: Instance) -> (),
+
+    get_auroraservice: () -> Instance,
+    getauroraservice: () -> Instance,
+
+    request: (options: Request) -> Response,
+    oth: typeof(oth),
+    crypt: typeof(crypt),
+    on_actor_state_created: VoltSignal,
+}
+declare syn: syn
+--#endregion
+
+--#region ImGui
+type ImGuiStringBuffer = {
+    Text: string,
+    SetText: (self: ImGuiStringBuffer, text: string) -> (),
+    GetText: (self: ImGuiStringBuffer) -> string,
+    Clear: (self: ImGuiStringBuffer) -> (),
+}
+type ImGuiStringBufferConstructor = {
+    new: (initial_text: string?) -> ImGuiStringBuffer,
+}
+type ImGuiFont = {
+    GetScale: (self: ImGuiFont) -> number,
+    SetScale: (self: ImGuiFont, scale: number) -> (),
+    IsLoaded: (self: ImGuiFont) -> boolean,
+    IsDirty: (self: ImGuiFont) -> boolean,
+}
+type ImGuiImage = {
+    Width: number,
+    Height: number,
+    IsLoaded: (self: ImGuiImage) -> boolean,
+}
+type ImGuiTexture = ImGuiImage | number
+type ImGuiWindowFlags = number
+type ImGuiChildFlags = number
+type ImGuiCond = number
+type ImGuiColorEditFlags = number
+type ImGuiInputTextFlags = number
+type ImGuiSelectableFlags = number
+type ImGuiComboFlags = number
+type ImGuiTreeNodeFlags = number
+type ImGuiPopupFlags = number
+type ImGuiTabItemFlags = number
+type ImGuiButtonFlags = number
+type ImGuiSliderFlags = number
+type ImGuiCol = number
+
+type ImGui = {
+    ArrowButton: (id: string, dir: number) -> boolean,
+    ArrowButtonEx: (id: string, dir: number, size: Vector2, flags: ImGuiButtonFlags?) -> boolean,
+    Begin: (name: string, open: boolean?, flags: ImGuiWindowFlags?) -> (boolean, boolean?),
+    BeginChild: (id: string, size: Vector2?, flags: ImGuiChildFlags?) -> boolean,
+    BeginCombo: (label: string, preview_value: string, flags: ImGuiComboFlags?) -> boolean,
+    BeginItemTooltip: (id: string?, flags: number?) -> boolean,
+    BeginListBox: (label: string, size: Vector2?) -> boolean,
+    BeginMenu: (label: string, enabled: boolean?) -> boolean,
+    BeginMenuBar: () -> boolean,
+    BeginPopup: (id: string, flags: ImGuiPopupFlags?) -> boolean,
+    BeginTooltip: () -> boolean,
+    BeginTooltipEx: (flags: number?) -> boolean,
+    BeginTooltipHidden: () -> boolean,
+    Button: (label: string, size: Vector2?) -> boolean,
+    ButtonEx: (label: string, size: Vector2?, flags: ImGuiButtonFlags?) -> boolean,
+    CalcTextSize: (size: number, font_size: number, text: string, wrap_width: number?) -> Vector2,
+    Checkbox: (label: string, v: boolean) -> (boolean, boolean),
+    CollapsingHeader: (label: string, flags: ImGuiTreeNodeFlags?) -> boolean,
+    ColorButton: (label: string, col: Color3, flags: ImGuiColorEditFlags?, size: Vector2?) -> boolean,
+    ColorPicker3: (label: string, col: Color3, flags: ImGuiColorEditFlags?) -> Color3,
+    Combo: (label: string, current_item: number, items: { string }, popup_max_height_in_items: number?) -> (boolean, number),
+    End: () -> (),
+    EndChild: () -> (),
+    EndCombo: () -> (),
+    EndListBox: () -> (),
+    EndMenu: () -> (),
+    EndMenuBar: () -> (),
+    EndPopup: () -> (),
+    EndTooltip: () -> (),
+    GetColorU32: (col: Color3, alpha_mul: number?) -> number,
+    GetCursorPos: () -> Vector2,
+    GetFont: () -> ImGuiFont,
+    GetWindowPos: () -> Vector2,
+    GetWindowSize: () -> Vector2,
+    Image: (texture: ImGuiTexture, size: Vector2, uv0: Vector2?, uv1: Vector2?, bg_col: Color3?, tint_col: Color3?) -> (),
+    ImageButton: (texture: ImGuiTexture, size: Vector2, uv0: Vector2?, uv1: Vector2?, bg_col: Color3?, tint_col: Color3?) -> boolean,
+    Indent: (indent_w: number?) -> (),
+    InputText: (label: string, buf: string | ImGuiStringBuffer, flags: ImGuiInputTextFlags?) -> (boolean, string),
+    InputTextMultiline: (label: string, buf: string | ImGuiStringBuffer, size: Vector2?, flags: ImGuiInputTextFlags?) -> (boolean, string),
+    InputTextWithHint: (label: string, hint: string, buf: string | ImGuiStringBuffer, flags: ImGuiInputTextFlags?) -> (boolean, string),
+    InvisibleButton: (label: string, size: Vector2, flags: ImGuiButtonFlags?) -> (boolean, boolean),
+    IsItemClicked: (mouse_button: number?) -> boolean,
+    LoadImage: (data: string) -> ImGuiImage?,
+    MenuItem: (label: string, shortcut: string?, selected: boolean?, enabled: boolean?) -> (boolean, boolean),
+    OnRender: (callback: () -> ()) -> (),
+    OpenPopup: (id: string, flags: ImGuiPopupFlags?) -> (),
+    PopId: () -> (),
+    PopItemWidth: () -> (),
+    PopStyleColor: (count: number?) -> (),
+    PushId: (id: string | number) -> (),
+    PushItemWidth: (item_width: number) -> (),
+    PushStyleColor: (idx: ImGuiCol | number, col: Color3) -> (),
+    RadioButton: (label: string, active: boolean) -> (boolean, boolean),
+    SameLine: (offset: number?, spacing: number?) -> (),
+    Selectable: (label: string, selected: boolean, flags: ImGuiSelectableFlags?, size: Vector2?) -> (boolean, boolean),
+    Separator: () -> (),
+    SetCursorPos: (local_pos: Vector2) -> (),
+    SetItemAllowOverlap: () -> (),
+    SetItemDefaultFocus: () -> (),
+    SetKeyboardFocusHere: (offset: number?) -> (),
+    SetNextWindowPos: (pos: Vector2, cond: ImGuiCond?, pivot: Vector2?) -> (),
+    SetNextWindowSize: (size: Vector2, cond: ImGuiCond?) -> (),
+    SetNextWindowSizeConstraints: (min: Vector2, max: Vector2, custom_callback: ((size: Vector2, min: Vector2, max: Vector2) -> Vector2)?, custom_callback_data: any?) -> (),
+    SetScrollHereX: (center_x_ratio: number?) -> (),
+    SetScrollHereY: (center_y_ratio: number?) -> (),
+    SliderAngle: (label: string, value: number, v_degrees_min: number?, v_degrees_max: number?, format: string?, flags: number?) -> (boolean, number),
+    SliderFloat: (label: string, value: number, min: number, max: number, format: string?, flags: ImGuiSliderFlags?) -> (boolean, number),
+    SliderInt: (label: string, value: number, min: number, max: number, format: string?, flags: ImGuiSliderFlags?) -> (boolean, number),
+    SmallButton: (label: string) -> boolean,
+    StringBuffer: ImGuiStringBufferConstructor,
+    TabItemButton: (label: string, flags: ImGuiTabItemFlags?) -> boolean,
+    Text: (text: string) -> (),
+    TextColored: (col: Color3, text: string) -> (),
+    TextDisabled: (text: string) -> (),
+    TextEx: (text: string, text_end: string?, flags: number?) -> (),
+    TextWrapped: (text: string) -> (),
+    TreePop: () -> (),
+    TreeNode: (label: string, flags: ImGuiTreeNodeFlags?) -> boolean,
+    TreeNodeEx: (label: string, flags: ImGuiTreeNodeFlags?) -> boolean,
+    Unindent: (indent_w: number?) -> (),
+}
+declare ImGui: ImGui
+
+
