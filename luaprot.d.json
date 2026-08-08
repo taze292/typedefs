@@ -1,0 +1,204 @@
+{
+    "@luaprot/global/LP_BLACKLIST": {
+        "documentation": "Blacklists the current key and/or fingerprint. Must be **called** with one string argument (for example a reason or note).\n\nOverwriting LuaProt runtime globals will crash the game.",
+        "params": [
+            {
+                "name": "reason",
+                "type": "string",
+                "documentation": "Reason or note recorded with the blacklist."
+            }
+        ],
+        "returns": []
+    },
+    "@luaprot/global/LP_DISCORD": {
+        "documentation": "Discord display name linked to the current key. If no Discord account is linked, this is `\"unknown\"`.\n\nRead-only; assigning to LuaProt runtime globals will crash the game.",
+        "code_sample": "print(\"Welcome \" .. LP_DISCORD)"
+    },
+    "@luaprot/global/LP_DISCORD_ID": {
+        "documentation": "Discord user ID linked to the current key. If no Discord account is linked, this is `0`.\n\nRead-only; assigning to LuaProt runtime globals will crash the game.",
+        "code_sample": "print(\"Your discord ID is \" .. LP_DISCORD_ID)"
+    },
+    "@luaprot/global/LP_EXECUTIONS": {
+        "documentation": "Total executions recorded for the current user/key. If not whitelisted, this is `0`.\n\nRead-only; assigning to LuaProt runtime globals will crash the game.",
+        "code_sample": "print(\"You have \" .. LP_EXECUTIONS .. \" executions\")"
+    },
+    "@luaprot/global/LP_FINGERPRINT": {
+        "documentation": "Hardware/fingerprint string supplied by the executor.\n\nRead-only; assigning to LuaProt runtime globals will crash the game.",
+        "code_sample": "print(\"Your HWID is \" .. LP_FINGERPRINT)"
+    },
+    "@luaprot/global/LP_KEYNOTE": {
+        "documentation": "Note attached to the key on the dashboard. Empty string (`\"\"`) when not whitelisted.\n\nRead-only; assigning to LuaProt runtime globals will crash the game.",
+        "code_sample": "print(\"Your keynote is \" .. LP_KEYNOTE)"
+    },
+    "@luaprot/global/LP_PREMIUM": {
+        "documentation": "`true` when the user is whitelisted—useful for freemium (FFA) scripts. Also `false` for keys produced by the key system.\n\nRead-only; assigning to LuaProt runtime globals will crash the game.",
+        "code_sample": "if LP_PREMIUM then\n    print(\"You're a premium user!\")\nelse\n    print(\"You are not premium.\")\nend"
+    },
+    "@luaprot/global/LP_SCRIPT_EXECUTIONS": {
+        "documentation": "Total executions for **this script** across users.\n\nRead-only; assigning to LuaProt runtime globals will crash the game.",
+        "code_sample": "print(\"The script has \" .. LP_SCRIPT_EXECUTIONS .. \" executions in total\")"
+    },
+    "@luaprot/global/LP_SCRIPT_NAME": {
+        "documentation": "Script name configured on the LuaProt dashboard.\n\nRead-only; assigning to LuaProt runtime globals will crash the game.",
+        "code_sample": "print(\"You have run \" .. LP_SCRIPT_NAME)"
+    },
+    "@luaprot/global/LP_SCRIPT_VERSION": {
+        "documentation": "Script version string (maintained/updated by LuaProt).\n\nRead-only; assigning to LuaProt runtime globals will crash the game.",
+        "code_sample": "print(\"Current version: \" .. LP_SCRIPT_VERSION)"
+    },
+    "@luaprot/global/LP_SESSION_COUNT": {
+        "documentation": "How many users are running **any** script under the same hub. Updates in real time.\n\nRead-only; assigning to LuaProt runtime globals will crash the game.",
+        "code_sample": "print(\"There are \" .. LP_SESSION_COUNT .. \" people using the script\")"
+    },
+    "@luaprot/global/LP_SESSION_ID": {
+        "documentation": "Session identifier for use with LuaProt session APIs. May be provided as a string or number depending on the hub integration.\n\nRead-only; assigning to LuaProt runtime globals will crash the game.",
+        "code_sample": "print(\"Your session id is \" .. LP_SESSION_ID)"
+    },
+    "@luaprot/global/LP_TIMELEFT": {
+        "documentation": "Seconds remaining until the key expires. `0` means it never expires. Updates in real time.\n\nRead-only; assigning to LuaProt runtime globals will crash the game.",
+        "code_sample": "print(\"Your key has \" .. LP_TIMELEFT .. \" seconds remaining\")"
+    },
+    "@luaprot/global/LP_INIT": {
+        "documentation": "Runs the given closure **before** LuaProt's main authentication logic. Useful for anticheat bypasses or other setup that must happen ahead of auth.",
+        "code_sample": "LP_INIT(function()\n    -- Run bypass / setup before LuaProt authenticates\nend)",
+        "params": [
+            {
+                "name": "closure",
+                "type": "GenericFunction<A..., R...>",
+                "documentation": "Any function body to execute prior to authentication."
+            }
+        ],
+        "returns": []
+    },
+    "@luaprot/global/LP_VMIFY": {
+        "documentation": "Virtualizes the input function to strengthen obfuscation. This significantly hurts runtime performance because execution runs inside an extra VM layer.",
+        "code_sample": "local run = LP_VMIFY(function()\n    -- sensitive logic\nend)\nrun()",
+        "params": [
+            {
+                "name": "fn",
+                "type": "GenericFunction<A..., R...>",
+                "documentation": "The function to virtualize."
+            }
+        ],
+        "returns": [
+            "GenericFunction<A..., R...>"
+        ]
+    },
+    "@luaprot/global/LP_ENCSTR": {
+        "documentation": "Transforms a string constant so it is harder to recover from constant dumps or similar static analysis.",
+        "code_sample": "local hidden = LP_ENCSTR(\"sensitive-token\")\nprint(hidden)",
+        "params": [
+            {
+                "name": "s",
+                "type": "string",
+                "documentation": "The literal string to protect."
+            }
+        ],
+        "returns": [
+            "string"
+        ]
+    },
+    "@luaprot/global/LP_DASHBOARD": {
+        "documentation": "Dashboard bridge for script UX: subscribe to component updates from the user's dashboard and push live values back to it.",
+        "keys": [
+            "@luaprot/global/LP_DASHBOARD.Connect",
+            "@luaprot/global/LP_DASHBOARD.Fire"
+        ]
+    },
+    "@luaprot/global/LP_DASHBOARD.Connect": {
+        "documentation": "Registers a callback for a dashboard component ID. Use this for toggles such as enabling or disabling autofarm features.",
+        "code_sample": "LP_DASHBOARD:Connect(\"AutoFarm\", function(enabled)\n    AutoFarmEnabled = enabled\nend)",
+        "params": [
+            {
+                "name": "componentId",
+                "type": "string",
+                "documentation": "Identifier of the dashboard widget to listen to."
+            },
+            {
+                "name": "callback",
+                "type": "(number | string | boolean) -> ()",
+                "documentation": "Invoked when the component changes; values may be boolean toggles, numeric sliders, or strings depending on the widget."
+            }
+        ],
+        "returns": []
+    },
+    "@luaprot/global/LP_DASHBOARD.Fire": {
+        "documentation": "Pushes an updated value to a dashboard component so you can reflect live stats (for example autofarm counters).",
+        "code_sample": "LP_DASHBOARD:Fire(\"Kills\", killCount)",
+        "params": [
+            {
+                "name": "componentId",
+                "type": "string",
+                "documentation": "Identifier of the dashboard widget to update."
+            },
+            {
+                "name": "value",
+                "type": "number | string | boolean",
+                "documentation": "Primitive payload shown by the component."
+            }
+        ],
+        "returns": []
+    },
+    "@luaprot/global/LP_SAVE_VALUE": {
+        "documentation": "Writes a namespaced storage value tied to the user's key or HWID—ideal for cloud configs or persistent counters such as lifetime kills.",
+        "code_sample": "LP_SAVE_VALUE(\"stats.total_kills\", totalKills, true)",
+        "params": [
+            {
+                "name": "id",
+                "type": "string",
+                "documentation": "Opaque storage key."
+            },
+            {
+                "name": "value",
+                "type": "number | string | boolean",
+                "documentation": "Data to persist."
+            },
+            {
+                "name": "overwrite",
+                "type": "boolean",
+                "documentation": "When `true`, writes or replaces the stored entry; when `false`, an existing value may be preserved depending on your LuaProt integration."
+            }
+        ],
+        "returns": []
+    },
+    "@luaprot/global/LP_GET_VALUE": {
+        "documentation": "Loads a previously saved storage value for the current key/HWID pairing.",
+        "code_sample": "local kills = LP_GET_VALUE(\"stats.total_kills\") or 0",
+        "params": [
+            {
+                "name": "id",
+                "type": "string",
+                "documentation": "Storage key to retrieve."
+            }
+        ],
+        "returns": [
+            "number | string | boolean | nil"
+        ]
+    },
+    "@luaprot/global/LP_DELETE_VALUE": {
+        "documentation": "Removes a stored entry when it is no longer needed.",
+        "code_sample": "LP_DELETE_VALUE(\"temp.session_flag\")",
+        "params": [
+            {
+                "name": "id",
+                "type": "string",
+                "documentation": "Storage key to delete."
+            }
+        ],
+        "returns": []
+    },
+    "@luaprot/global/LP_SECURE_REQUEST": {
+        "documentation": "Issues an end-to-end encrypted request through LuaProt's proxy to frustrate HTTP interception. This materially raises the effort required for attackers but does not provide absolute guarantees.",
+        "code_sample": "local response = LP_SECURE_REQUEST({\n    url = \"https://example.com/api\",\n    method = \"POST\",\n    body = payload,\n})",
+        "params": [
+            {
+                "name": "data",
+                "type": "{ [string]: any }",
+                "documentation": "Structured request payload interpreted by LuaProt (fields depend on your integration)."
+            }
+        ],
+        "returns": [
+            "any"
+        ]
+    }
+}
