@@ -47,6 +47,16 @@ Update 2
 + All request Aliases
 ```
 
+Update 3
+```diff
++ ismetamethodhooked
++ cansignalreplicate
++ setconnectionenabled
++ 5 hookfunction variants
++ hook_meta_method
++ gethostip variants
+```
+
 **Sources**:
 - https://docs.voltbz.net/docs
 - https://docs.potassium.pro/api-reference/introduction
