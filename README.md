@@ -1,6 +1,12 @@
 # Usage
-1. Unzip the folder & drag all the files into `C:\Users\USER\.vscode\luau-lsp-types\`  
-2. Add this block somewhere into your `settings.json` (user settings, NOT workspace settings)
+1. Unzip the files & put them in the directory of your choice. (`C:\Users\USER\.vscode\luau-lsp-types` in this example)
+2. Insert the settings below into either your workspace or user settings
+   - If you want the typedefs to apply to **EVERY** project, put them in user settings
+       1. Press `Ctrl + Shift + P` and search for `Preferences: Open User Settings (JSON)`
+   - If you want to apply the typedefs to each individual project, put them in workspace settings
+       1. Create a folder called `.vscode` in your workspace folder
+       2. Create a file called `settings.json` inside that folder, and paste the settings below
+       3. Be sure to Remove the last comma after the last bracket if you put them at the end of your `settings.json`
 ```json
 {
     ...
