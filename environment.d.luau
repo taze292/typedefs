@@ -66,7 +66,13 @@ declare function checkcaller(): boolean
 declare function clonefunction<A..., R...>(function_to_clone: GenericFunction<A..., R...>): GenericFunction<A..., R...>
 declare function getfunctionhash(function_to_hash: AnyFunction): string
 declare function hookfunction<A..., R...>(function_to_hook: GenericFunction<A..., R...>, hook: GenericFunction<A..., R...>): GenericFunction<A..., R...>
+declare function hookclosure<A..., R...>(function_to_hook: GenericFunction<A..., R...>, hook: GenericFunction<A..., R...>): GenericFunction<A..., R...>
+declare function hookfunc<A..., R...>(function_to_hook: GenericFunction<A..., R...>, hook: GenericFunction<A..., R...>): GenericFunction<A..., R...>
+declare function hook_func<A..., R...>(function_to_hook: GenericFunction<A..., R...>, hook: GenericFunction<A..., R...>): GenericFunction<A..., R...>
+declare function hook_function<A..., R...>(function_to_hook: GenericFunction<A..., R...>, hook: GenericFunction<A..., R...>): GenericFunction<A..., R...>
 declare function hookmetamethod<A..., R...>(object: AnyTable | Instance, metamethod_name: string, hook: GenericFunction<A..., R...>): GenericFunction<A..., R...>
+declare function hook_metamethod<A..., R...>(object: AnyTable | Instance, metamethod_name: string, hook: GenericFunction<A..., R...>): GenericFunction<A..., R...>
+declare function ismetamethodhooked(object: AnyTable | Instance, metamethod_name: string): boolean
 declare function is_function_hooked(func: AnyFunction): boolean
 declare function isfunctionhooked(func: AnyFunction): boolean
 declare function iscclosure(func: AnyFunction): boolean
@@ -74,6 +80,8 @@ declare function isexecutorclosure(func: AnyFunction): boolean
 declare function islclosure(func: AnyFunction): boolean
 declare function newcclosure<A..., R...>(function_to_wrap: GenericFunction<A..., R...>, name: string?): GenericFunction<A..., R...>
 declare function restorefunction(functionToRestore: AnyFunction): ()
+declare function unhookfunction(functionToRestore: AnyFunction): ()
+declare function unhook_function(functionToRestore: AnyFunction): ()
 
 declare function getnamecallmethod(): string
 declare function setnamecallmethod(method: string): ()
@@ -508,9 +516,13 @@ declare game: typeof(game) & ExtraDataModel
 type http = {
     request: (options: Request) -> Response,
     gethostip: () -> string,
+    gethost_ip: () -> string,
 }
 declare http: http
+declare function gethostip(): string
+declare function gethost_ip(): string
 declare function httprequest(options: Request): Response
+declare function http_request(options: Request): Response
 --#endregion
 
 --#region Reflection
@@ -519,6 +531,7 @@ declare function getthreadidentity(): number
 declare function sethiddenproperty(instance: Instance, property_name: string, property_value: any): boolean
 declare function setscriptable(object: Instance, property: string, state: boolean): boolean?
 declare function setthreadidentity(id: number): ()
+declare function setthreadcontext(id: number): ()
 
 declare function getbspval(instance: Instance, property: string, base64: boolean?): string
 declare function getpcd(trianglemeshpart: Instance): (string, string)
@@ -556,6 +569,8 @@ declare extern type Connection with
 end
 declare function firesignal<T...>(signal: RBXScriptSignal<T...>, ...: T...): ()
 declare function getconnections<T...>(signal: RBXScriptSignal<T...>): { Connection }
+declare function cansignalreplicate<T...>(signal: RBXScriptSignal<T...>): boolean
+declare function setconnectionenabled(connection: Connection, enabled: boolean): ()
 declare function lz4compress(data: string): string
 declare function lz4decompress(data: string, size: number): string
 declare function messagebox(text: string, caption: string, flags: number): number
@@ -854,5 +869,3 @@ type ImGui = {
     Unindent: (indent_w: number?) -> (),
 }
 declare ImGui: ImGui
-
-

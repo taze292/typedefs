@@ -2399,5 +2399,229 @@
         "returns": [
             "string"
         ]
+    },
+    "@custom/global/http": {
+        "documentation": "Library for making HTTP requests and retrieving host information.",
+        "keys": [
+            "@custom/global/http.request",
+            "@custom/global/http.gethostip",
+            "@custom/global/http.gethost_ip"
+        ]
+    },
+    "@custom/global/http.request": {
+        "documentation": "Alias of `request`.",
+        "params": [
+            {
+                "name": "options",
+                "type": "Request",
+                "documentation": "The request options."
+            }
+        ],
+        "returns": [
+            "Response"
+        ]
+    },
+    "@custom/global/http.gethostip": {
+        "documentation": "Returns the host's IP address.",
+        "params": [],
+        "returns": [
+            "string"
+        ]
+    },
+    "@custom/global/http.gethost_ip": {
+        "documentation": "Alias of `http.gethostip`.",
+        "params": [],
+        "returns": [
+            "string"
+        ]
+    },
+    "@custom/global/gethostip": {
+        "documentation": "Returns the host's IP address.",
+        "params": [],
+        "returns": [
+            "string"
+        ]
+    },
+    "@custom/global/gethost_ip": {
+        "documentation": "Alias of `gethostip`.",
+        "params": [],
+        "returns": [
+            "string"
+        ]
+    },
+    "@custom/global/hookclosure": {
+        "documentation": "Alias of `hookfunction`.",
+        "params": [
+            {
+                "name": "function_to_hook",
+                "type": "function",
+                "documentation": "The function to hook."
+            },
+            {
+                "name": "hook",
+                "type": "function",
+                "documentation": "The replacement function."
+            }
+        ],
+        "returns": [
+            "function"
+        ]
+    },
+    "@custom/global/hookfunc": {
+        "documentation": "Alias of `hookfunction`.",
+        "params": [
+            {
+                "name": "function_to_hook",
+                "type": "function",
+                "documentation": "The function to hook."
+            },
+            {
+                "name": "hook",
+                "type": "function",
+                "documentation": "The replacement function."
+            }
+        ],
+        "returns": [
+            "function"
+        ]
+    },
+    "@custom/global/hook_func": {
+        "documentation": "Alias of `hookfunction`.",
+        "params": [
+            {
+                "name": "function_to_hook",
+                "type": "function",
+                "documentation": "The function to hook."
+            },
+            {
+                "name": "hook",
+                "type": "function",
+                "documentation": "The replacement function."
+            }
+        ],
+        "returns": [
+            "function"
+        ]
+    },
+    "@custom/global/hook_function": {
+        "documentation": "Alias of `hookfunction`.",
+        "params": [
+            {
+                "name": "function_to_hook",
+                "type": "function",
+                "documentation": "The function to hook."
+            },
+            {
+                "name": "hook",
+                "type": "function",
+                "documentation": "The replacement function."
+            }
+        ],
+        "returns": [
+            "function"
+        ]
+    },
+    "@custom/global/hook_metamethod": {
+        "documentation": "Alias of `hookmetamethod`.",
+        "params": [
+            {
+                "name": "object",
+                "type": "AnyTable | Instance",
+                "documentation": "The object whose metatable contains the metamethod."
+            },
+            {
+                "name": "metamethod_name",
+                "type": "string",
+                "documentation": "The name of the metamethod to hook, e.g. `__index` or `__namecall`."
+            },
+            {
+                "name": "hook",
+                "type": "function",
+                "documentation": "The replacement metamethod function."
+            }
+        ],
+        "returns": [
+            "function"
+        ]
+    },
+    "@custom/global/ismetamethodhooked": {
+        "documentation": "Returns whether the given metamethod on the object has been hooked.",
+        "params": [
+            {
+                "name": "object",
+                "type": "AnyTable | Instance",
+                "documentation": "The object whose metatable to inspect."
+            },
+            {
+                "name": "metamethod_name",
+                "type": "string",
+                "documentation": "The name of the metamethod to check, e.g. `__index` or `__namecall`."
+            }
+        ],
+        "returns": [
+            "boolean"
+        ]
+    },
+    "@custom/global/unhookfunction": {
+        "documentation": "Alias of `restorefunction`.",
+        "params": [
+            {
+                "name": "functionToRestore",
+                "type": "function",
+                "documentation": "The function to restore to its original implementation."
+            }
+        ],
+        "returns": []
+    },
+    "@custom/global/unhook_function": {
+        "documentation": "Alias of `restorefunction`.",
+        "params": [
+            {
+                "name": "functionToRestore",
+                "type": "function",
+                "documentation": "The function to restore to its original implementation."
+            }
+        ],
+        "returns": []
+    },
+    "@custom/global/cansignalreplicate": {
+        "documentation": "Returns whether the given signal can be replicated to the server.",
+        "params": [
+            {
+                "name": "signal",
+                "type": "RBXScriptSignal",
+                "documentation": "The signal to check."
+            }
+        ],
+        "returns": [
+            "boolean"
+        ]
+    },
+    "@custom/global/setconnectionenabled": {
+        "documentation": "Enables or disables the given connection obtained from `getconnections`.",
+        "params": [
+            {
+                "name": "connection",
+                "type": "Connection",
+                "documentation": "The connection to modify."
+            },
+            {
+                "name": "enabled",
+                "type": "boolean",
+                "documentation": "Whether the connection should be enabled."
+            }
+        ],
+        "returns": []
+    },
+    "@custom/global/setthreadcontext": {
+        "documentation": "Alias of `setthreadidentity`.",
+        "params": [
+            {
+                "name": "id",
+                "type": "number",
+                "documentation": "The thread identity to set."
+            }
+        ],
+        "returns": []
     }
 }
