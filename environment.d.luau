@@ -552,6 +552,7 @@ declare function getscripts(): { GenericScript }
 declare function getsenv(script: GenericScript): { [any]: any }
 declare function loadstring<A...>(src: string, chunkname: string?): (((A...) -> any) | nil, string?)
 declare function getscriptfromthread(Thread: thread): GenericScript?
+declare function decompile(script: GenericScript): string
 --#endregion
 
 --#region Signals
